@@ -6,8 +6,8 @@ pygame.init()
 pygame.key.set_repeat(200, 70)
 
 FPS = 50
-WIDTH = 1280
-HEIGHT = 720
+WIDTH = 400
+HEIGHT = 300
 STEP = 50
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -99,7 +99,7 @@ def start_screen():
 
 
 tile_images = {'wall': load_image('box.png'), 'empty': load_image('grass.png')}
-player_image = load_image('right_stay_0.png')
+player_image = load_image('mario.png')
 
 tile_width = tile_height = 50
 
@@ -128,17 +128,17 @@ class Camera:
     # сдвинуть объект obj на смещение камеры
     def apply(self, obj):
         obj.rect.x += self.dx
-        # вычислим координату клитки, если она уехала влево за границу экрана
+#        # вычислим координату клитки, если она уехала влево за границу экрана
 #        if obj.rect.x < -obj.rect.width:
 #           obj.rect.x += (self.field_size[0] + 1) * obj.rect.width
 #        # вычислим координату клитки, если она уехала вправо за границу экрана            
 #        if obj.rect.x >= (self.field_size[0]) * obj.rect.width:
 #            obj.rect.x += -obj.rect.width * (1 + self.field_size[0])
         obj.rect.y += self.dy
-#       # вычислим координату клитки, если она уехала вверх за границу экрана
+#        # вычислим координату клитки, если она уехала вверх за границу экрана
 #        if obj.rect.y < -obj.rect.height:
-#            obj.rect.y += (self.field_size[1] + 1) * obj.rect.height
-        # вычислим координату клитки, если она уехала вниз за границу экрана
+#           obj.rect.y += (self.field_size[1] + 1) * obj.rect.height
+#        # вычислим координату клитки, если она уехала вниз за границу экрана
 #        if obj.rect.y >= (self.field_size[1]) * obj.rect.height:
 #            obj.rect.y += -obj.rect.height * (1 + self.field_size[1])
 
@@ -147,28 +147,10 @@ class Camera:
         self.dx = -(target.rect.x + target.rect.w // 2 - WIDTH // 2)
         self.dy = -(target.rect.y + target.rect.h // 2 - HEIGHT // 2)
 
-class AnimatedSprite(pygame.sprite.Sprite):
-    def __init__(self, sheet, columns, rows, x, y):
-        super().__init__(all_sprites)
-        self.walk_right = ["data/right_go_0.png", "data/right_go_1.png", "data/right_go_2.png", "data/right_go_3.png", "data/right_go_4.png", "data/right_go_5.png", "data/right_go_6.png", "data/right_go_7.png", "data/right_go_8.png", "data/right_go_9.png", "data/right_go_10.png", "data/right_go_11.png"]
-        self.walk = 0
-        self.hit_anim = ["data/Texas_hit_1.png", "data/Texas_hit_2.png", "data/Texas_hit_3.png", "data/Texas_hit_4.png", "data/Texas_hit_5.png"]
-        self.hit = 0
-        self.slime_anim = ["data/slime_go_1.png", "data/slime_go_2.png", "data/slime_go_3.png", "data/slime_go_4.png","data/slime_go_5.png", "data/slime_go_6.png"]
-        self.slime_go = 0
-        self.flower = ["data/flower_go_1.png", "data/flower_go_2.png", "data/flower_go_3.png", "data/flower_go_4.png"]
-        self.flower_go = 0
-        self.frames = [self.walk_right, self.hit_anim, self.slime_anim, self.flower]
-        self.image = self.frames[self.cur_frame]
-        self.rect = self.rect.move(x, y)
-
-    def update(self):
-        self.cur_frame = (self.cur_frame + 1) % len(self.frames)
-        self.image = self.frames[self.cur_frame]
 
 start_screen()
 
-player, level_x, level_y = generate_level(load_level("levelex.txt"))
+player, level_x, level_y = generate_level(load_level('levelex.txt'))
 camera = Camera((level_x, level_y))
 
 running = True
@@ -188,7 +170,7 @@ while running:
             if event.key == pygame.K_DOWN:
                 player.rect.y += STEP
 
-   # camera.update(player)
+    camera.update(player)
 
     for sprite in all_sprites:
         camera.apply(sprite)
